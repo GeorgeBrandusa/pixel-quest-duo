@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#f3efdf" />
+    <title>Pixel Quest Duo</title>
+    <link rel="stylesheet" href="/styles.css" />
+    <script type="module" src="/game.js"></script>
+  </head>
+  <body>
+    <header class="app-header">
+      <a class="brand" href="#home" aria-label="Pixel Quest Duo home" id="brand-home">
+        <span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+        <span>PIXEL QUEST <b>DUO</b></span>
+      </a>
+      <button class="settings-nav" id="open-settings" type="button">SETTINGS</button>
+      <div class="connection-status" id="connection-status">
+        <span class="status-light"></span>
+        <span id="connection-label">Not connected</span>
+      </div>
+    </header>
+
+    <main>
+      <section class="screen home-screen is-active" id="screen-home" aria-labelledby="home-title">
+        <div class="home-layout">
+          <div class="home-copy">
+            <div class="eyebrow"><span class="eyebrow-line"></span> CO-OP PLATFORMER <span>01 / 07</span></div>
+            <h1 id="home-title">Pixel<br /><em>Quest</em></h1>
+            <p class="intro-copy">A tiny world, a big way out.<br />Bring your friends.</p>
+
+            <div class="home-actions">
+              <label class="field-label" for="player-name">YOUR NAME</label>
+              <input id="player-name" class="text-input" maxlength="16" autocomplete="nickname" value="Adventurer" />
+              <button class="primary-button" id="create-room" type="button">
+                <span>Create a room</span><span class="button-arrow" aria-hidden="true">↗</span>
+              </button>
+              <div class="join-divider"><span>OR JOIN A CREW</span></div>
+              <label class="field-label" for="room-code">ROOM CODE</label>
+              <div class="code-entry">
+                <input id="room-code" class="text-input code-input" maxlength="6" autocomplete="off" placeholder="6 LETTERS" />
+                <button class="join-button" id="join-room" type="button">JOIN <span aria-hidden="true">→</span></button>
+              </div>
+              <p class="form-message" id="form-message" role="status" aria-live="polite"></p>
+            </div>
+            <div class="home-footnote"><span class="sun-mark" aria-hidden="true">✳</span> UP TO FOUR PLAYERS</div>
+          </div>
+
+          <div class="home-art art-frame" id="home-art-frame">
+            <div class="art-label"><span>WORLD 01</span><span>THE CLOVER RIDGE</span></div>
+            <canvas id="game-canvas" width="960" height="540" aria-label="Pixel Quest world preview"></canvas>
+            <div class="art-caption"><span>FIND THE PATH</span><span>✳</span></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="screen settings-screen" id="screen-settings" aria-labelledby="settings-title" hidden>
+        <div class="settings-layout">
+          <div class="settings-heading">
+            <button class="text-back" id="settings-back" type="button"><span aria-hidden="true">←</span> BACK</button>
+            <div class="eyebrow"><span class="eyebrow-line"></span> PERSONALIZE YOUR QUEST</div>
+            <h2 id="settings-title">Your way<br /><em>to play.</em></h2>
+            <p class="intro-copy">Choose the controls and presentation that feel right.</p>
+            <div class="settings-art art-frame" id="settings-art-frame">
+              <div class="art-label"><span>MAKE IT YOURS</span><span>✳</span></div>
+            </div>
+          </div>
+          <div class="settings-panel">
+            <section class="settings-section" aria-labelledby="controls-title">
+              <div class="settings-section-heading">
+                <div><span class="field-label">KEYBOARD</span><h3 id="controls-title">Controls</h3></div>
+                <button class="settings-reset" id="reset-controls" type="button">RESET</button>
+              </div>
+              <p class="settings-help">Select a control, then press the key you want to use. Attack also works with a mouse click.</p>
+              <div class="control-bindings">
+                <div class="control-binding"><span>Move left</span><button type="button" data-bind="left">A</button></div>
+                <div class="control-binding"><span>Move right</span><button type="button" data-bind="right">D</button></div>
+                <div class="control-binding"><span>Jump</span><button type="button" data-bind="jump">SPACE</button></div>
+                <div class="control-binding"><span>Attack</span><button type="button" data-bind="attack">J</button></div>
+                <div class="control-binding"><span>Interact</span><button type="button" data-bind="interact">E</button></div>
+                <div class="control-binding"><span>Inventory</span><button type="button" data-bind="inventory">I</button></div>
+              </div>
+              <p class="settings-feedback" id="settings-feedback" role="status" aria-live="polite"></p>
+            </section>
+            <section class="settings-section" aria-labelledby="display-title">
+              <div class="settings-section-heading">
+                <div><span class="field-label">DISPLAY</span><h3 id="display-title">Resolution</h3></div>
+              </div>
+              <label class="settings-choice" for="resolution-setting">
+                <span><strong>Render quality</strong><small>Higher quality looks sharper; lower quality may run faster.</small></span>
+                <select id="resolution-setting" class="settings-select">
+                  <option value="640">Low · 640 × 360</option>
+                  <option value="960">Standard · 960 × 540</option>
+                  <option value="1280">High · 1280 × 720</option>
+                </select>
+              </label>
+            </section>
+            <section class="settings-section" aria-labelledby="sound-title">
+              <div class="settings-section-heading">
+                <div><span class="field-label">AUDIO</span><h3 id="sound-title">Sound effects</h3></div>
+                <span class="settings-volume" id="sound-value">70%</span>
+              </div>
+              <label class="settings-choice sound-choice" for="sound-setting">
+                <span><strong>Volume</strong><small>Adjust or mute in-game sound effects.</small></span>
+                <input id="sound-setting" class="settings-range" type="range" min="0" max="100" step="5" value="70" />
+              </label>
+              <button class="settings-reset sound-test" id="test-sound" type="button">TEST SOUND</button>
+            </section>
+          </div>
+        </div>
+      </section>
+
+      <section class="screen lobby-screen" id="screen-lobby" aria-labelledby="lobby-title" hidden>
+        <div class="lobby-layout">
+          <div class="lobby-heading">
+            <button class="text-back" id="leave-room" type="button"><span aria-hidden="true">←</span> LEAVE ROOM</button>
+            <div class="eyebrow"><span class="eyebrow-line"></span> CO-OP LOBBY <span>01 / 04</span></div>
+            <h2 id="lobby-title">Gather your<br /><em>crew.</em></h2>
+            <p class="intro-copy">The ridge is ready when you are.</p>
+            <div class="room-code-block">
+              <div>
+                <span class="field-label">SHARE THIS ROOM CODE</span>
+                <strong class="room-code" id="active-room-code">------</strong>
+              </div>
+              <button class="copy-button" id="copy-code" type="button" title="Copy room code">COPY</button>
+            </div>
+            <div class="difficulty-readout">
+              <span class="field-label">RUN DIFFICULTY</span>
+              <strong id="lobby-difficulty">SOLO · EASY</strong>
+              <span id="lobby-difficulty-detail">1 chest · 3 monsters</span>
+            </div>
+          </div>
+
+          <div class="lobby-content">
+            <div class="lobby-art art-frame" id="lobby-art-frame">
+              <div class="art-label"><span>YOUR NEXT ADVENTURE</span><span>LVL 01</span></div>
+            </div>
+            <div class="crew-heading"><span>THE CREW</span><span id="crew-count">0 / 4</span></div>
+            <ul class="player-list" id="player-list"></ul>
+            <button class="primary-button start-button" id="start-quest" type="button">
+              <span>Start the quest</span><span class="button-arrow" aria-hidden="true">↗</span>
+            </button>
+            <p class="host-note" id="host-note">Share your code to invite up to 3 friends.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="screen loading-screen" id="screen-loading" aria-labelledby="loading-title" hidden>
+        <div class="loading-art art-frame" id="loading-art-frame"></div>
+        <div class="loading-scrim"></div>
+        <div class="loading-content">
+          <span class="loading-mark" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+          <p class="eyebrow"><span id="loading-level-index">WORLD 01 / 50</span><span>·</span><span id="loading-level-name">THE CLOVER RIDGE</span></p>
+          <h2 id="loading-title">Opening the trail</h2>
+          <p>Gathering your crew at the ridge.</p>
+          <div class="loading-track"><span></span></div>
+          <span class="loading-code">ROOM <b id="loading-room-code">------</b></span>
+        </div>
+      </section>
+
+      <section class="screen game-screen" id="screen-game" aria-label="Pixel Quest game" hidden>
+        <header class="game-hud">
+          <div class="game-world-name"><span class="level-index" id="game-level-index">LVL 01 / 50</span><span id="game-level-name">THE CLOVER RIDGE</span></div>
+          <div class="game-objective"><span class="objective-icon" aria-hidden="true">✧</span><div class="objective-copy"><span id="objective-label">Defeat the monsters to find the key</span><span class="gear-summary" id="gear-summary">TRAIL KNIFE · DMG 1 · NO ARMOR</span></div></div>
+          <div class="game-hud-right"><span class="game-difficulty" id="game-difficulty">EASY</span><div class="player-vitals"><span class="game-health" id="game-health" aria-label="3 hearts">♥ ♥ ♥</span><span class="health-meter" role="progressbar" aria-label="Health" aria-valuemin="0" aria-valuemax="3" aria-valuenow="3"><span id="health-fill"></span></span><span class="game-lives" id="game-lives">LIVES 3 · CHECKPOINT 01</span></div><span class="game-crew" id="game-player-count">1 / 4 PLAYERS</span><span class="game-room-code" id="game-room-code">------</span><button class="inventory-button" id="open-inventory" type="button" aria-label="Open inventory" title="Inventory">BAG</button><button class="pause-button" id="pause-game" type="button" aria-label="Pause game" title="Pause game">Ⅱ</button></div>
+        </header>
+        <main class="game-stage">
+          <div class="game-frame" id="game-frame">
+            <div class="interact-prompt" id="interact-prompt" hidden><span class="keycap">E</span><span id="interact-label">OPEN CHEST</span></div>
+            <div class="inventory-overlay" id="inventory-overlay" hidden>
+              <section class="inventory-panel" role="dialog" aria-modal="true" aria-labelledby="inventory-title">
+                <header class="inventory-header">
+                  <div><span class="field-label">PLAYER PACK</span><h2 id="inventory-title">Inventory & trades</h2></div>
+                  <button class="inventory-close" id="close-inventory" type="button" aria-label="Close inventory">×</button>
+                </header>
+                <p class="inventory-message" id="inventory-message" role="status" aria-live="polite">Equip your finds or trade with a nearby player.</p>
+                <section class="inventory-section">
+                  <div class="inventory-section-heading"><span>YOUR ITEMS</span><span id="inventory-item-count">0 ITEMS</span></div>
+                  <ul class="inventory-items" id="inventory-items"></ul>
+                </section>
+                <section class="inventory-section" id="trade-crew-section">
+                  <div class="inventory-section-heading"><span>NEARBY CREW</span><span>TRADE</span></div>
+                  <ul class="trade-player-list" id="trade-player-list"></ul>
+                </section>
+                <section class="incoming-trade" id="incoming-trade" hidden>
+                  <p id="incoming-trade-copy">A player wants to trade.</p>
+                  <div class="trade-actions"><button class="trade-secondary" id="decline-trade" type="button">Decline</button><button class="trade-primary" id="accept-trade" type="button">Accept trade</button></div>
+                </section>
+                <section class="active-trade" id="active-trade" hidden>
+                  <div class="inventory-section-heading"><span>TRADE TABLE</span><button class="trade-cancel" id="cancel-trade" type="button">CANCEL</button></div>
+                  <div class="trade-offers">
+                    <div class="trade-offer-side"><span class="field-label">YOUR OFFER</span><strong id="your-offer">Nothing selected</strong><select class="trade-select" id="trade-item-select" aria-label="Select item to offer"></select><button class="trade-secondary" id="set-trade-offer" type="button">Set offer</button><span class="trade-lock-status" id="your-lock-status"></span></div>
+                    <div class="trade-offer-side"><span class="field-label" id="other-offer-label">THEIR OFFER</span><strong id="their-offer">Waiting for offer</strong><span class="trade-lock-status" id="their-lock-status"></span></div>
+                  </div>
+                  <button class="trade-primary trade-lock-button" id="lock-trade" type="button">Lock my offer</button>
+                </section>
+              </section>
+            </div>
+            <div class="game-overlay" id="game-overlay" hidden>
+              <span class="overlay-spark" aria-hidden="true">✳</span>
+              <strong id="overlay-title">Exit found!</strong>
+              <span id="overlay-copy">Waiting for the rest of the crew.</span>
+              <button class="overlay-button" id="finish-home" type="button">Return to menu</button>
+            </div>
+            <div class="pause-overlay" id="pause-overlay" hidden>
+              <span class="eyebrow">PIXEL QUEST DUO</span>
+              <strong>Taking a breather?</strong>
+              <button class="primary-button" id="resume-game" type="button">Continue quest <span>→</span></button>
+              <button class="settings-pause-button" id="pause-settings" type="button">Settings</button>
+              <button class="pause-leave" id="exit-game" type="button">Leave quest</button>
+            </div>
+          </div>
+        </main>
+        <footer class="game-controls">
+          <div class="control-hint"><span class="keycap" data-control-label="left">A</span><span class="keycap" data-control-label="right">D</span><span>MOVE</span><span class="hint-divider"></span><span class="keycap wide" data-control-label="jump">SPACE</span><span>JUMP</span><span class="hint-divider"></span><span>MOUSE 1</span><span>ATTACK</span><span class="hint-divider"></span><span class="keycap" data-control-label="inventory">I</span><span>BAG</span></div>
+          <span class="exit-hint"><span class="exit-glyph" aria-hidden="true">↗</span> REACH THE DOOR</span>
+          <div class="mobile-controls" aria-label="Touch controls">
+            <button class="touch-control" id="touch-left" type="button" aria-label="Move left">←</button>
+            <button class="touch-control" id="touch-right" type="button" aria-label="Move right">→</button>
+            <button class="touch-control attack-control" id="touch-attack" type="button" aria-label="Attack">✦</button>
+            <button class="touch-control interact-control" id="touch-interact" type="button" aria-label="Open chest or collect loot">E</button>
+            <button class="touch-control jump-control" id="touch-jump" type="button" aria-label="Jump">JUMP <span>↑</span></button>
+          </div>
+        </footer>
+      </section>
+    </main>
+  </body>
+</html>
